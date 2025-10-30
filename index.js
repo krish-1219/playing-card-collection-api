@@ -8,12 +8,11 @@ app.use(express.json());
 // In-memory array to store playing cards
 let cards = [
   { id: 1, suit: 'Hearts', value: 'A' },
-  { id: 2, suit: 'Diamonds', value: 'K' },
-  { id: 3, suit: 'Clubs', value: 'Q' }
+  { id: 2, suit: 'Diamonds', value: 'K' }
 ];
 
 // Counter for generating unique IDs
-let nextId = 4;
+let nextId = 3;
 
 // GET /cards - Retrieve all playing cards
 app.get('/cards', (req, res) => {
@@ -28,14 +27,14 @@ app.get('/cards', (req, res) => {
 app.get('/cards/:id', (req, res) => {
   const cardId = parseInt(req.params.id);
   const card = cards.find(c => c.id === cardId);
-
+  
   if (!card) {
     return res.status(404).json({
       success: false,
       message: `Card with ID ${cardId} not found`
     });
   }
-
+  
   res.json({
     success: true,
     data: card
@@ -45,7 +44,7 @@ app.get('/cards/:id', (req, res) => {
 // POST /cards - Add a new playing card
 app.post('/cards', (req, res) => {
   const { suit, value } = req.body;
-
+  
   // Validation
   if (!suit || !value) {
     return res.status(400).json({
@@ -53,16 +52,16 @@ app.post('/cards', (req, res) => {
       message: 'Both suit and value are required'
     });
   }
-
+  
   // Create new card
   const newCard = {
     id: nextId++,
     suit,
     value
   };
-
+  
   cards.push(newCard);
-
+  
   res.status(201).json({
     success: true,
     message: 'Card added successfully',
@@ -74,16 +73,16 @@ app.post('/cards', (req, res) => {
 app.delete('/cards/:id', (req, res) => {
   const cardId = parseInt(req.params.id);
   const cardIndex = cards.findIndex(c => c.id === cardId);
-
+  
   if (cardIndex === -1) {
     return res.status(404).json({
       success: false,
       message: `Card with ID ${cardId} not found`
     });
   }
-
+  
   const deletedCard = cards.splice(cardIndex, 1)[0];
-
+  
   res.json({
     success: true,
     message: 'Card deleted successfully',
